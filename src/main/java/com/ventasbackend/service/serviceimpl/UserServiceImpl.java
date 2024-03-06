@@ -4,12 +4,11 @@ import com.ventasbackend.dto.UserDTO;
 import com.ventasbackend.entity.ERole;
 import com.ventasbackend.entity.Role;
 import com.ventasbackend.entity.User;
-import com.ventasbackend.exceptions.RoleNotFoundException;
+import com.ventasbackend.exceptions.ApiRequestException;
 import com.ventasbackend.repository.RoleRepository;
 import com.ventasbackend.repository.UserRepository;
 import com.ventasbackend.service.UserService;
 import com.ventasbackend.mapper.UserMapper; // Importa tu clase UserMapper aquí
-import org.aspectj.weaver.ast.Instanceof;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -57,7 +56,7 @@ public class UserServiceImpl implements UserService {
         if(user.getId() == null) {
             ERole eRole = hasUser();
             Role role = roleRepository.findByRoleType(eRole)
-                    .orElseThrow(() -> new RoleNotFoundException("Role not found"));
+                    .orElseThrow(() -> new ApiRequestException("Error"));
 
             userEntity.setRole(role);
         }else {

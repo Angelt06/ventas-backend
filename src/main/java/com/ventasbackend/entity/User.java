@@ -36,7 +36,7 @@ public class User {
     @Email(message = "El formato de correo electrónico no es válido")
     private String email;
 
-    @ManyToOne( fetch =  FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @ManyToOne( fetch =  FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 

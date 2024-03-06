@@ -22,5 +22,5 @@ public class Role {
     @Column(nullable = false, unique = true)
     private ERole roleType;
 
-    // Constructores, getters y setters si es necesario
+
 }
