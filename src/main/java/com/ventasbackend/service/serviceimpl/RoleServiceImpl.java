@@ -1,6 +1,6 @@
 package com.ventasbackend.service.serviceimpl;
 
-import com.ventasbackend.entity.ERole;
+import com.ventasbackend.entity.enums.ERole;
 import com.ventasbackend.entity.Role;
 import com.ventasbackend.repository.RoleRepository;
 import com.ventasbackend.service.RoleService;

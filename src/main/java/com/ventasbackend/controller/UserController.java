@@ -1,7 +1,8 @@
 package com.ventasbackend.controller;
+
 import com.ventasbackend.dto.UserDTO;
 import com.ventasbackend.service.UserService;
-import com.ventasbackend.utils.ControllerUtils;
+import com.ventasbackend.utils.ControllerErrors;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -23,7 +24,6 @@ public class UserController {
 
     private final UserService userService;
     private final String entiyName = "usuario";
-    private UserDTO user = null;
 
     @Autowired
     public UserController(UserService userService) {
@@ -44,66 +44,85 @@ public class UserController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
-
+        UserDTO existingUserById;
         try {
-             user = userService.findUserById(id).orElse(null);
-            if(user == null){return ControllerUtils.handleEntityNotFound(id, entiyName);}
+            existingUserById = userService.findUserById(id);
+            if(existingUserById  == null){
+                return ControllerErrors.handleEntityNotFound(id, entiyName );}
 
         } catch (DataAccessException e) {
            return handleClientError(e);
         }
 
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        return new ResponseEntity<>(existingUserById ,HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO, BindingResult result) {
-
         String action = "creado";
+        UserDTO existingUser;
 
-        if(result.hasErrors()){ return ControllerUtils.handleValidationErrors(result);}
+        if(result.hasErrors()){ return ControllerErrors.handleValidationErrors(result);}
 
         try {
-           user = userService.saveUser(userDTO);
+            if (userService.findUserByUsername(userDTO.getUsername()) != null) {
+                return ControllerErrors.handleEntityError("El username ya existe");}
+
+            if (userService.findUserByEmail(userDTO.getEmail()) != null) {
+                return ControllerErrors.handleEntityError("El email ya existe");}
+           existingUser = userService.saveUser(userDTO);
 
         } catch (DataAccessException e) {
            return handleClientError(e);
         }
-        return new ResponseEntity<>(handleSuccessResponse(user, action), HttpStatus.CREATED);
+        return new ResponseEntity<>(handleSuccessResponse(existingUser, action), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@Valid @PathVariable Long id, @RequestBody UserDTO userDTO,
                                         BindingResult result) {
         String action = "actualizado";
+        UserDTO existingUser;
+        UserDTO existingUserName;
+        UserDTO existingUserEmail;
 
-        if(result.hasErrors()){ return ControllerUtils.handleValidationErrors(result);}
-
-        user = userService.findUserById(id).orElse(null);
-        if(user == null){return ControllerUtils.handleEntityNotFound(id, entiyName);}
+        if(result.hasErrors()){ return ControllerErrors.handleValidationErrors(result);}
 
         try {
+            existingUserName = userService.findUserByUsername(userDTO.getUsername());
+            if (existingUserName != null && (!existingUserName.equals(userDTO.getUsername()))) {
+                return ControllerErrors.handleEntityError("El username ya existe");}
+
+            existingUserEmail = userService.findUserByEmail(userDTO.getEmail());
+            if (existingUserEmail != null && (!existingUserEmail.equals(userDTO.getEmail()))) {
+                return ControllerErrors.handleEntityError("El email ya existe");}
+
+            if(userService.findUserById(id) == null) {
+                return ControllerErrors.handleEntityNotFound(id, entiyName );
+            }
             userDTO.setId(id);
-           user = userService.saveUser(userDTO);
+            existingUser = userService.saveUser(userDTO);
 
         } catch (DataAccessException e) {
            return handleClientError(e);
         }
-        return new ResponseEntity<>(handleSuccessResponse(user, action), HttpStatus.CREATED);
+        return new ResponseEntity<>(handleSuccessResponse(existingUser, action), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         String action = "eliminado";
-        user = userService.findUserById(id).orElse(null);
-        if(user == null){return ControllerUtils.handleEntityNotFound(id, entiyName);}
+        UserDTO existingUser;
+
         try {
+            existingUser = userService.findUserById(id);
+            if(existingUser == null){return ControllerErrors.handleEntityNotFound(id, entiyName);}
             userService.deleteUser(id);
 
         } catch (DataAccessException e) {
             return handleClientError(e);
         }
-        return new ResponseEntity<>(handleSuccessResponse(user, action), HttpStatus.OK);
+        return new ResponseEntity<>(handleSuccessResponse(existingUser, action), HttpStatus.OK);
 
     }
 

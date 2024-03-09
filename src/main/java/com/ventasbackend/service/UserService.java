@@ -11,8 +11,10 @@ import java.util.Optional;
 public interface UserService {
     List<UserDTO> getAllUsers();
     Page<UserDTO> getAllUsers(Pageable pageable);
-    Optional<UserDTO> findUserById(Long userId);
+    UserDTO findUserById(Long userId);
     UserDTO saveUser(UserDTO user);
     void deleteUser(Long userId);
+    UserDTO findUserByUsername(String username);
+    UserDTO findUserByEmail(String email);
 
 }

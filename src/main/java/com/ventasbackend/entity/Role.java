@@ -1,5 +1,6 @@
 package com.ventasbackend.entity;
 
+import com.ventasbackend.entity.enums.ERole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

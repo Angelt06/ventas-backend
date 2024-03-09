@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @Entity
 @Table(name = "users")
@@ -39,5 +41,12 @@ public class User {
     @ManyToOne( fetch =  FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
+    @OneToOne
+    @JoinColumn(name = "cart_id")
+    private ShoppingCart cart;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Sale> sales;
 
 }

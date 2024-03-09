@@ -1,4 +1,4 @@
-package com.ventasbackend.entity;
+package com.ventasbackend.entity.enums;
 
 public enum ERole {
     CUSTOMER,

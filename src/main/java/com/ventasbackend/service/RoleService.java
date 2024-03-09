@@ -1,6 +1,6 @@
 package com.ventasbackend.service;
 
-import com.ventasbackend.entity.ERole;
+import com.ventasbackend.entity.enums.ERole;
 import com.ventasbackend.entity.Role;
 
 import java.util.Optional;
