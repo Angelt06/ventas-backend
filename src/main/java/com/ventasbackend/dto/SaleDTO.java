@@ -1,5 +1,6 @@
 package com.ventasbackend.dto;
 
+import com.ventasbackend.entity.enums.ESaleStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +18,6 @@ public class SaleDTO {
     private LocalDateTime saleDate;
     private double total;
     private Long userId;
+    private ESaleStatus saleStatus;
     private List<SaleDetailDTO> saleDetails;
 }

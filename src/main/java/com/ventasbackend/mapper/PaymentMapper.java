@@ -15,7 +15,7 @@ public class PaymentMapper {
         paymentDTO.setStatus(payment.getStatus());
         paymentDTO.setPaymentDate(payment.getPaymentDate());
         paymentDTO.setDescription(payment.getDescription());
-        paymentDTO.setSaleId(payment.getSale().getId());
+        //paymentDTO.setSaleId(payment.getSale().getId());
         return paymentDTO;
     }
 

@@ -1,6 +1,6 @@
 package com.ventasbackend.entity.enums;
 
-public enum ECartStatus {
+public enum ESaleStatus {
     ACTIVO,
     COMPLETADO,
     CANCELADO

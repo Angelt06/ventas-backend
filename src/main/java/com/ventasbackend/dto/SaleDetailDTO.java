@@ -1,5 +1,6 @@
 package com.ventasbackend.dto;
 
+import com.ventasbackend.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +15,5 @@ public class SaleDetailDTO {
     private int quantity;
     private double unitPrice;
     private double subtotal;
-    private Long productId;
+    private Product product;
 }

@@ -42,10 +42,6 @@ public class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @OneToOne
-    @JoinColumn(name = "cart_id")
-    private ShoppingCart cart;
-
     @OneToMany(mappedBy = "user")
     private Set<Sale> sales;
 

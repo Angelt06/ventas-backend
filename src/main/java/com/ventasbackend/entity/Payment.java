@@ -31,7 +31,8 @@ public class Payment {
     @Size(max = 255, message = "El método de pago no puede exceder los 255 caracteres")
     private String paymentMethod;
 
-    @NotNull(message = "El estado del pago no puede ser nulo")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private EPaymentStatus status;
 
     private LocalDateTime paymentDate;
@@ -40,7 +41,7 @@ public class Payment {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "sale_id", nullable = false)
+    @JoinColumn(name = "sale_id")
     private Sale sale;
 
 }

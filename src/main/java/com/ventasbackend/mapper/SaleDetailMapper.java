@@ -21,7 +21,7 @@ public class SaleDetailMapper {
         saleDetailDTO.setQuantity(saleDetail.getQuantity());
         saleDetailDTO.setUnitPrice(saleDetail.getUnitPrice());
         saleDetailDTO.setSubtotal(saleDetail.getSubtotal());
-        saleDetailDTO.setProductId(saleDetail.getProduct().getId());
+        saleDetailDTO.setProduct(saleDetail.getProduct());
         return saleDetailDTO;
     }
 
@@ -31,6 +31,7 @@ public class SaleDetailMapper {
         saleDetail.setQuantity(saleDetailDTO.getQuantity());
         saleDetail.setUnitPrice(saleDetailDTO.getUnitPrice());
         saleDetail.setSubtotal(saleDetailDTO.getSubtotal());
+        saleDetail.setProduct(saleDetailDTO.getProduct());
         return saleDetail;
     }
 }

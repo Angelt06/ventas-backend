@@ -1,7 +1,9 @@
 package com.ventasbackend.entity;
 
+import com.ventasbackend.entity.enums.ESaleStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,12 +32,16 @@ public class Sale {
     @PositiveOrZero(message = "El total de la venta debe ser un número positivo o cero")
     private double total;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ESaleStatus saleStatus;
+
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "sale_id", nullable = false)
+    @JoinColumn(name = "sale_id")
     private List<SaleDetail> saleDetails;
 
 }

@@ -20,10 +20,12 @@ public class SaleMapper {
         saleDTO.setId(sale.getId());
         saleDTO.setSaleDate(sale.getSaleDate());
         saleDTO.setTotal(sale.getTotal());
+        saleDTO.setSaleStatus(sale.getSaleStatus());
         saleDTO.setUserId(sale.getUser().getId());
-        saleDTO.setSaleDetails(sale.getSaleDetails().stream()
+        /*saleDTO.setSaleDetails(sale.getSaleDetails().stream()
                 .map(saleDetailMapper::saleDetailToSaleDetailDTO)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList()));*/
+
         return saleDTO;
     }
 
@@ -32,6 +34,9 @@ public class SaleMapper {
         sale.setId(saleDTO.getId());
         sale.setSaleDate(saleDTO.getSaleDate());
         sale.setTotal(saleDTO.getTotal());
+        sale.setSaleStatus(saleDTO.getSaleStatus());
+
+
         // No mapeamos userId ni saleDetails aquí, ya que serán manejados por separado
         return sale;
     }
