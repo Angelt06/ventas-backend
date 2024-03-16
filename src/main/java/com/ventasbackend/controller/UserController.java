@@ -1,7 +1,9 @@
 package com.ventasbackend.controller;
 
+import com.ventasbackend.dto.AuthRequestDTO;
 import com.ventasbackend.dto.UserDTO;
 import com.ventasbackend.service.UserService;
+import com.ventasbackend.service.serviceimpl.AuthServiceImpl;
 import com.ventasbackend.utils.ControllerErrors;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class UserController {
     private final UserService userService;
     private final String entiyName = "usuario";
 
+    @Autowired
+    AuthServiceImpl authService;
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
@@ -57,26 +61,6 @@ public class UserController {
         return new ResponseEntity<>(existingUserById ,HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO, BindingResult result) {
-        String action = "creado";
-        UserDTO existingUser;
-
-        if(result.hasErrors()){ return ControllerErrors.handleValidationErrors(result);}
-
-        try {
-            if (userService.findUserByUsername(userDTO.getUsername()) != null) {
-                return ControllerErrors.handleEntityError("El username ya existe");}
-
-            if (userService.findUserByEmail(userDTO.getEmail()) != null) {
-                return ControllerErrors.handleEntityError("El email ya existe");}
-           existingUser = userService.saveUser(userDTO);
-
-        } catch (DataAccessException e) {
-           return handleClientError(e);
-        }
-        return new ResponseEntity<>(handleSuccessResponse(existingUser, action), HttpStatus.CREATED);
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@Valid @PathVariable Long id, @RequestBody UserDTO userDTO,

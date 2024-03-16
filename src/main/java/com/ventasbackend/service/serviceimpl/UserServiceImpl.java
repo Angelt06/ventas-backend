@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,11 +29,15 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
     @Override
@@ -59,7 +65,7 @@ public class UserServiceImpl implements UserService {
         logger.info("Usuario recibido: {}", user);
         User userEntity;
         userEntity = (user.getId() == null)
-                ? isCreating(user) :  isUpdating(user);
+                ? isUserCreating(user) :  isUserUpdating(user);
         logger.info("Usuario creado/actualizado: {}", userEntity);
         User savedUser = userRepository.save(userEntity);
         logger.info("Usuario guardado en la base de datos: {}", savedUser);
@@ -83,7 +89,7 @@ public class UserServiceImpl implements UserService {
         return (user == null) ? null : userMapper.userToUserDTO(user);
     }
 
-    private User isUpdating(UserDTO user) {
+    private User isUserUpdating(UserDTO user) {
         User userEntity;
         User userOldRole = userRepository.findById(user.getId()).orElse(null);
         userEntity = userMapper.userDTOToUser(user);
@@ -91,13 +97,14 @@ public class UserServiceImpl implements UserService {
         return userEntity;
     }
 
-    private User isCreating(UserDTO user) {
+    private User isUserCreating(UserDTO user) {
         User userEntity;
         ERole eRole = roleAsign();
         Role role = roleRepository.findByRoleType(eRole)
                 .orElseThrow(() -> new ApiRequestException("Error"));
 
         userEntity = userMapper.userDTOToUser(user);
+        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         userEntity.setRole(role);
         return userEntity;
     }
